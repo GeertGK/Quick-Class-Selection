@@ -1,0 +1,194 @@
+/**
+ * Quick Class Selector - Admin Styles
+ */
+
+.qcs-admin-wrap {
+    max-width: 900px;
+}
+
+.qcs-settings-container {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.qcs-classes-list {
+    margin-bottom: 20px;
+}
+
+.qcs-list-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 2px solid #ccd0d4;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.qcs-list-body {
+    min-height: 50px;
+}
+
+.qcs-class-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f1;
+    background: #fff;
+    transition: background 0.2s ease;
+}
+
+.qcs-class-row:hover {
+    background: #f9f9f9;
+}
+
+.qcs-class-row.ui-sortable-helper {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+}
+
+.qcs-class-row.ui-sortable-placeholder {
+    visibility: visible !important;
+    background: #e5f3ff;
+    border: 2px dashed #2271b1;
+    border-radius: 4px;
+}
+
+.qcs-col-handle {
+    width: 40px;
+    text-align: center;
+    cursor: move;
+    color: #8c8f94;
+}
+
+.qcs-col-handle:hover {
+    color: #2271b1;
+}
+
+.qcs-col-class {
+    flex: 1;
+    padding-right: 15px;
+}
+
+.qcs-col-description {
+    flex: 2;
+    padding-right: 15px;
+}
+
+.qcs-col-actions {
+    width: 60px;
+    text-align: center;
+}
+
+.qcs-col-class input,
+.qcs-col-description input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.qcs-col-class input:focus,
+.qcs-col-description input:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.qcs-delete-btn {
+    padding: 4px 8px !important;
+    min-height: 32px !important;
+}
+
+.qcs-delete-btn .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 1;
+    color: #cc1818;
+}
+
+.qcs-delete-btn:hover {
+    background: #cc1818 !important;
+    border-color: #cc1818 !important;
+}
+
+.qcs-delete-btn:hover .dashicons {
+    color: #fff;
+}
+
+.qcs-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f1;
+}
+
+#qcs-add-class {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#qcs-add-class .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+}
+
+.qcs-save-status {
+    margin-left: 10px;
+    font-weight: 500;
+}
+
+.qcs-save-status.success {
+    color: #00a32a;
+}
+
+.qcs-save-status.error {
+    color: #d63638;
+}
+
+.qcs-help-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f0f6fc;
+    border: 1px solid #c3d4e5;
+    border-radius: 4px;
+}
+
+.qcs-help-section h3 {
+    margin-top: 0;
+    color: #1d2327;
+}
+
+.qcs-help-section ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.qcs-help-section li {
+    margin-bottom: 8px;
+    color: #3c434a;
+}
+
+.qcs-help-section li:last-child {
+    margin-bottom: 0;
+}
+
+/* Empty state */
+.qcs-list-body:empty::after {
+    content: 'Nog geen classes toegevoegd. Klik op "Nieuwe class toevoegen" om te beginnen.';
+    display: block;
+    padding: 30px;
+    text-align: center;
+    color: #8c8f94;
+    font-style: italic;
+}
