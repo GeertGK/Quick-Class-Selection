@@ -183,6 +183,57 @@
     margin-bottom: 0;
 }
 
+/* Batch Import */
+.qcs-batch-import-container {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.qcs-batch-import-container h3 {
+    margin-top: 0;
+    color: #1d2327;
+}
+
+.qcs-batch-textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 10px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.qcs-batch-textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.qcs-batch-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.qcs-batch-status {
+    font-weight: 500;
+}
+
+.qcs-batch-status.success {
+    color: #00a32a;
+}
+
+.qcs-batch-status.error {
+    color: #d63638;
+}
+
 /* Empty state */
 .qcs-list-body:empty::after {
     content: 'Nog geen classes toegevoegd. Klik op "Nieuwe class toevoegen" om te beginnen.';

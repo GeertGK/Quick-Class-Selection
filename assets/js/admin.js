@@ -14,6 +14,7 @@
             $('#qcs-add-class').on('click', this.addNewRow);
             $('#qcs-save-classes').on('click', this.saveClasses);
             $(document).on('click', '.qcs-delete-btn', this.deleteRow);
+            $('#qcs-batch-import-btn').on('click', this.batchImport);
         },
 
         initSortable: function() {
@@ -111,6 +112,51 @@
                             $(this).text('').show().removeClass('success error');
                         });
                     }, 2000);
+                }
+            });
+        },
+
+        batchImport: function() {
+            var $button = $(this);
+            var $status = $('#qcs-batch-status');
+            var $textarea = $('#qcs-batch-input');
+            var importData = $textarea.val().trim();
+
+            if (!importData) {
+                $status.text(qcsAdmin.strings.importEmpty).removeClass('success').addClass('error').show();
+                return;
+            }
+
+            $button.prop('disabled', true);
+            $status.text('').removeClass('success error');
+
+            $.ajax({
+                url: qcsAdmin.ajaxUrl,
+                method: 'POST',
+                data: {
+                    action: 'qcs_batch_import',
+                    nonce: qcsAdmin.nonce,
+                    import_data: importData
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $status.text(response.data.message).addClass('success').show();
+                        QCSAdmin.refreshList(response.data.classes);
+                        $textarea.val('');
+                    } else {
+                        $status.text(qcsAdmin.strings.error).addClass('error').show();
+                    }
+                },
+                error: function() {
+                    $status.text(qcsAdmin.strings.error).addClass('error').show();
+                },
+                complete: function() {
+                    $button.prop('disabled', false);
+                    setTimeout(function() {
+                        $status.fadeOut(300, function() {
+                            $(this).text('').show().removeClass('success error');
+                        });
+                    }, 3000);
                 }
             });
         },

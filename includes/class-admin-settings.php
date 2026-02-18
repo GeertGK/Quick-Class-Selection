@@ -20,6 +20,7 @@ class QCS_Admin_Settings {
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
         add_action( 'wp_ajax_qcs_save_classes', array( $this, 'ajax_save_classes' ) );
         add_action( 'wp_ajax_qcs_delete_class', array( $this, 'ajax_delete_class' ) );
+        add_action( 'wp_ajax_qcs_batch_import', array( $this, 'ajax_batch_import' ) );
     }
 
     /**
@@ -97,6 +98,7 @@ class QCS_Admin_Settings {
                 'confirmDelete' => __( 'Weet je zeker dat je deze class wilt verwijderen?', 'quick-class-selector' ),
                 'saved' => __( 'Opgeslagen!', 'quick-class-selector' ),
                 'error' => __( 'Er is een fout opgetreden.', 'quick-class-selector' ),
+                'importEmpty' => __( 'Voer minimaal één class in.', 'quick-class-selector' ),
             ),
         ) );
     }
@@ -145,6 +147,75 @@ class QCS_Admin_Settings {
         }
 
         wp_send_json_error( 'Class niet gevonden' );
+    }
+
+    /**
+     * AJAX batch import classes
+     */
+    public function ajax_batch_import() {
+        check_ajax_referer( 'qcs_admin_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( 'Geen toegang' );
+        }
+
+        $raw = isset( $_POST['import_data'] ) ? sanitize_textarea_field( wp_unslash( $_POST['import_data'] ) ) : '';
+
+        if ( empty( trim( $raw ) ) ) {
+            wp_send_json_error( 'Geen data ontvangen' );
+        }
+
+        $existing_classes = get_option( 'qcs_predefined_classes', array() );
+        $existing_names = array_map( function( $item ) {
+            return $item['class'];
+        }, $existing_classes );
+
+        $lines = explode( "\n", $raw );
+        $added = 0;
+        $skipped = 0;
+
+        foreach ( $lines as $line ) {
+            $line = trim( $line );
+            if ( empty( $line ) ) {
+                continue;
+            }
+
+            // Split on first comma only
+            $parts = explode( ',', $line, 2 );
+            $class_name = sanitize_html_class( trim( $parts[0] ) );
+            $description = isset( $parts[1] ) ? sanitize_text_field( trim( $parts[1] ) ) : '';
+
+            if ( empty( $class_name ) ) {
+                $skipped++;
+                continue;
+            }
+
+            if ( in_array( $class_name, $existing_names, true ) ) {
+                $skipped++;
+                continue;
+            }
+
+            $existing_classes[] = array(
+                'class'       => $class_name,
+                'description' => $description,
+            );
+            $existing_names[] = $class_name;
+            $added++;
+        }
+
+        update_option( 'qcs_predefined_classes', $existing_classes );
+
+        wp_send_json_success( array(
+            'message' => sprintf(
+                /* translators: 1: number added, 2: number skipped */
+                __( '%1$d class(es) toegevoegd, %2$d overgeslagen.', 'quick-class-selector' ),
+                $added,
+                $skipped
+            ),
+            'added'   => $added,
+            'skipped' => $skipped,
+            'classes' => $existing_classes,
+        ) );
     }
 
     /**
@@ -200,6 +271,20 @@ class QCS_Admin_Settings {
                         <?php esc_html_e( 'Opslaan', 'quick-class-selector' ); ?>
                     </button>
                     <span class="qcs-save-status" id="qcs-save-status"></span>
+                </div>
+            </div>
+
+            <div class="qcs-batch-import-container">
+                <h3><?php esc_html_e( 'Batch Import', 'quick-class-selector' ); ?></h3>
+                <p class="description">
+                    <?php esc_html_e( 'Voeg meerdere classes tegelijk toe. Eén class per regel, optioneel met beschrijving gescheiden door een komma.', 'quick-class-selector' ); ?>
+                </p>
+                <textarea id="qcs-batch-input" class="qcs-batch-textarea" rows="8" placeholder="margin-top-lg, Grote marge boven&#10;text-center, Tekst centreren&#10;hidden-mobile&#10;bg-primary, Primaire achtergrondkleur"></textarea>
+                <div class="qcs-batch-actions">
+                    <button type="button" class="button button-primary" id="qcs-batch-import-btn">
+                        <?php esc_html_e( 'Importeren', 'quick-class-selector' ); ?>
+                    </button>
+                    <span class="qcs-batch-status" id="qcs-batch-status"></span>
                 </div>
             </div>
 
