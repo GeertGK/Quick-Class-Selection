@@ -281,12 +281,14 @@ class QCS_GitHub_Updater {
         }
 
         $expected_slug = dirname( $this->basename );
-        $new_source = trailingslashit( $remote_source ) . $expected_slug;
+        $new_source = trailingslashit( $remote_source ) . trailingslashit( $expected_slug );
 
-        if ( $source !== $new_source ) {
-            if ( $wp_filesystem->move( $source, $new_source ) ) {
-                return $new_source;
-            }
+        if ( trailingslashit( $source ) === $new_source ) {
+            return $source;
+        }
+
+        if ( $wp_filesystem->move( untrailingslashit( $source ), untrailingslashit( $new_source ) ) ) {
+            return $new_source;
         }
 
         return $source;
