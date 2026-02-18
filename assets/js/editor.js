@@ -20,6 +20,15 @@
         return;
     }
 
+    // Detect hex color in a string and return the first match or null
+    var hexColorRegex = /#([0-9a-fA-F]{3,6})\b/;
+
+    function getHexColor(text) {
+        if (!text) return null;
+        var match = text.match(hexColorRegex);
+        return match ? match[0] : null;
+    }
+
     /**
      * Multi Select Dropdown Component
      */
@@ -30,6 +39,18 @@
         var _useState = useState(false),
             isOpen = _useState[0],
             setIsOpen = _useState[1];
+
+        var _useSearchState = useState(''),
+            searchTerm = _useSearchState[0],
+            setSearchTerm = _useSearchState[1];
+
+        // Filter classes based on search term
+        var filteredClasses = predefinedClasses.filter(function(item) {
+            if (!searchTerm) return true;
+            var term = searchTerm.toLowerCase();
+            return item.class.toLowerCase().indexOf(term) !== -1 ||
+                   (item.description && item.description.toLowerCase().indexOf(term) !== -1);
+        });
 
         // Parse current classes
         var currentClasses = className ? className.split(' ').filter(Boolean) : [];
@@ -73,6 +94,7 @@
             function handleClickOutside(event) {
                 if (isOpen && !event.target.closest('.qcs-dropdown')) {
                     setIsOpen(false);
+                    setSearchTerm('');
                 }
             }
             document.addEventListener('mousedown', handleClickOutside);
@@ -118,6 +140,18 @@
             isOpen && createElement(
                 'div',
                 { className: 'qcs-dropdown-menu' },
+                createElement(
+                    'div',
+                    { className: 'qcs-search-wrap' },
+                    createElement('input', {
+                        type: 'text',
+                        className: 'qcs-search-input',
+                        placeholder: 'Zoek classes...',
+                        value: searchTerm,
+                        onChange: function(e) { setSearchTerm(e.target.value); },
+                        onClick: function(e) { e.stopPropagation(); }
+                    })
+                ),
                 selectedQuickClasses.length > 0 && createElement(
                     'button',
                     {
@@ -130,7 +164,12 @@
                     },
                     'Alles wissen'
                 ),
-                predefinedClasses.map(function(item) {
+                filteredClasses.length === 0 && createElement(
+                    'div',
+                    { className: 'qcs-no-results' },
+                    'Geen classes gevonden'
+                ),
+                filteredClasses.map(function(item) {
                     var isSelected = selectedQuickClasses.includes(item.class);
                     return createElement(
                         'label',
@@ -154,7 +193,11 @@
                             item.description && createElement(
                                 'span',
                                 { className: 'qcs-option-description' },
-                                item.description
+                                item.description,
+                                getHexColor(item.description) && createElement('span', {
+                                    className: 'qcs-color-swatch',
+                                    style: { backgroundColor: getHexColor(item.description) }
+                                })
                             )
                         ),
                         createElement(

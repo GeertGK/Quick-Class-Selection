@@ -234,6 +234,53 @@
     color: #d63638;
 }
 
+/* Color swatches */
+.qcs-color-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    vertical-align: middle;
+    margin-left: 6px;
+    flex-shrink: 0;
+}
+
+.qcs-col-description {
+    position: relative;
+}
+
+.qcs-description-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.qcs-description-wrap input {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Pagination */
+.qcs-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid #f0f0f1;
+}
+
+.qcs-page-info {
+    font-size: 13px;
+    color: #3c434a;
+}
+
+.qcs-pagination .button[disabled] {
+    opacity: 0.5;
+    cursor: default;
+}
+
 /* Empty state */
 .qcs-list-body:empty::after {
     content: 'Nog geen classes toegevoegd. Klik op "Nieuwe class toevoegen" om te beginnen.';
