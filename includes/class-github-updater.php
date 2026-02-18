@@ -276,7 +276,17 @@ class QCS_GitHub_Updater {
     public function fix_source_dir( $source, $remote_source, $upgrader, $hook_extra ) {
         global $wp_filesystem;
 
-        if ( ! isset( $hook_extra['plugin'] ) || $hook_extra['plugin'] !== $this->basename ) {
+        // For auto-updates, check hook_extra. For manual uploads, check if
+        // our main plugin file exists in the extracted source folder.
+        $is_our_plugin = false;
+
+        if ( isset( $hook_extra['plugin'] ) && $hook_extra['plugin'] === $this->basename ) {
+            $is_our_plugin = true;
+        } elseif ( $wp_filesystem->exists( trailingslashit( $source ) . basename( $this->file ) ) ) {
+            $is_our_plugin = true;
+        }
+
+        if ( ! $is_our_plugin ) {
             return $source;
         }
 
