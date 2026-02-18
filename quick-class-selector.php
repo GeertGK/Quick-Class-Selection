@@ -3,7 +3,7 @@
  * Plugin Name: Quick Class Selector
  * Plugin URI: https://github.com/GeertGK/Quick-Class-Selection
  * Description: Voeg snel voorgedefinieerde CSS classes toe aan Gutenberg blocks via een handige multi-select.
- * Version: 1.2.1
+ * Version: 1.3.0
  * Author: Samuel Studios
  * Author URI: https://samuelstudios.nl
  * GitHub Plugin URI: https://github.com/GeertGK/Quick-Class-Selection
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'QCS_VERSION', '1.2.1' );
+define( 'QCS_VERSION', '1.3.0' );
 define( 'QCS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'QCS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
