@@ -17,7 +17,7 @@ jobs:
       - name: Build plugin ZIP
         run: |
           mkdir quick-class-selector
-          cp -r assets includes src quick-class-selector.php quick-class-selector/
+          cp -r assets includes quick-class-selector.php quick-class-selector/
           zip -r quick-class-selector.zip quick-class-selector/
 
       - name: Upload ZIP to release
