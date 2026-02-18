@@ -276,13 +276,13 @@ class QCS_GitHub_Updater {
     public function fix_source_dir( $source, $remote_source, $upgrader, $hook_extra ) {
         global $wp_filesystem;
 
-        // For auto-updates, check hook_extra. For manual uploads, check if
-        // our main plugin file exists in the extracted source folder.
+        // Detect our plugin via hook_extra (auto-updates) or by checking
+        // for the main plugin file in the extracted source (manual uploads).
         $is_our_plugin = false;
 
         if ( isset( $hook_extra['plugin'] ) && $hook_extra['plugin'] === $this->basename ) {
             $is_our_plugin = true;
-        } elseif ( $wp_filesystem->exists( trailingslashit( $source ) . basename( $this->file ) ) ) {
+        } elseif ( $wp_filesystem->exists( trailingslashit( $source ) . 'quick-class-selector.php' ) ) {
             $is_our_plugin = true;
         }
 
@@ -290,8 +290,8 @@ class QCS_GitHub_Updater {
             return $source;
         }
 
-        $expected_slug = dirname( $this->basename );
-        $new_source = trailingslashit( $remote_source ) . trailingslashit( $expected_slug );
+        // Always use the hardcoded slug to avoid inheriting a wrong folder name.
+        $new_source = trailingslashit( $remote_source ) . trailingslashit( 'quick-class-selector' );
 
         if ( trailingslashit( $source ) === $new_source ) {
             return $source;
